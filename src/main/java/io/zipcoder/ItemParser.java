@@ -32,7 +32,7 @@ public class ItemParser {
     }
 
     public Item parseSingleItem(String singleItem) throws ItemParseException {
-        Pattern p = Pattern.compile("(?<=:)(.*?)(?=;|##|$)");
+        Pattern p = Pattern.compile("(?<=:|@|\\^|%|\\*)(.*?)(?=;|##|$)");
         List<String> test = new ArrayList();
         Item answer;
         Matcher m;
@@ -46,16 +46,20 @@ public class ItemParser {
             test.add(m.group());
         }
            if(test.size() == 0){
-               try{
-                   new Item(name, price, type, experation);
-               } catch (Exception e) {
-                   e.printStackTrace();
-               }
+               throw new ItemParseException();
            }
                name = test.get(0).toLowerCase();
+           try {
                price = Double.parseDouble(test.get(1));
+           }catch (NumberFormatException e){
+               throw new ItemParseException();
+           }
                type = test.get(2).toLowerCase();
+           try {
                experation = test.get(3).toLowerCase();
+           }catch(IndexOutOfBoundsException e){
+               throw new ItemParseException();
+           }
 
         answer = new Item(name, price, type, experation);
 
