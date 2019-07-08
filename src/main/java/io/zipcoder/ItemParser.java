@@ -17,14 +17,13 @@ public class ItemParser {
         String[] item = valueToParse.split("##");
 
         for (int i = 0; i <item.length ; i++) {
-            System.out.println(item[i]);
 
-/*
+
                 try {
                     answer.add(parseSingleItem(item[i]));
                 } catch (ItemParseException e) {
                     e.printStackTrace();
-                }*/
+                }
 
             }
 
@@ -33,7 +32,7 @@ public class ItemParser {
     }
 
     public Item parseSingleItem(String singleItem) throws ItemParseException {
-        Pattern p = Pattern.compile("(?<=:)(.*?)(?=;|##)");
+        Pattern p = Pattern.compile("(?<=:)(.*?)(?=;|##|$)");
         List<String> test = new ArrayList();
         Item answer;
         Matcher m;
@@ -46,12 +45,19 @@ public class ItemParser {
         while(m.find()){
             test.add(m.group());
         }
+           if(test.size() == 0){
+               try{
+                   new Item(name, price, type, experation);
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+           }
+               name = test.get(0).toLowerCase();
+               price = Double.parseDouble(test.get(1));
+               type = test.get(2).toLowerCase();
+               experation = test.get(3).toLowerCase();
 
-            name = test.get(0).toLowerCase();
-            price = Double.parseDouble(test.get(1));
-            type = test.get(2).toLowerCase();
-            experation = test.get(3).toLowerCase();
-            answer = new Item(name,price,type,experation);
+        answer = new Item(name, price, type, experation);
 
 
 
